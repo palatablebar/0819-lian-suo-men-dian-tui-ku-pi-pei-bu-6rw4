@@ -51,3 +51,22 @@ body.book {margin:0;background:var(--bg);color:var(--ink);font:var(--size)/1.55 
 .receipt-list {display:grid;gap:5px}
 .receipt-line {display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:2px dotted var(--line);font-family:var(--font-num)}
 .receipt-pending {color:var(--alert);padding-top:7px}
+
+.book .cutoff {display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.book .cutoff input {width:6.5em;cursor:text}
+.book .totals {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 10px}
+.book .totals div {border:1px solid var(--line);border-radius:var(--radius);padding:5px 7px;min-width:0}
+.book .totals dt {color:var(--sub);font-size:.83em} .book .totals dd {margin:0;font:600 1.05em/1.2 var(--font-num)}
+.book #ledger-rows {min-width:0}
+.book #ledger-diff h3,.book .archive h3 {font-size:14px;margin:12px 0 6px}
+.book #ledger-diff ul {margin:0;padding-left:18px;font-size:.92em}
+.book #ledger-diff .blocked,.book .blocked {color:var(--alert);font-weight:700;overflow-wrap:anywhere}
+.book #versions {list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.book #versions li {display:flex;gap:6px;align-items:center}
+.book .muted {color:var(--sub);font-size:.83em}
+.book #ledger-rows td:nth-child(3),.book #ledger-rows td:nth-child(4) {text-align:right}
+.book .batch {margin-top:12px;border-top:1px solid var(--line);padding-top:8px}
+.book .batch summary {cursor:pointer;color:var(--accent);font-weight:700}
+.book .batch #history {margin-top:8px}
+.book #ledger-receipts {margin-top:8px}
+.book #ledger-receipts td:nth-child(3),.book #ledger-receipts td:nth-child(4),.book #ledger-receipts td:nth-child(5) {text-align:right}

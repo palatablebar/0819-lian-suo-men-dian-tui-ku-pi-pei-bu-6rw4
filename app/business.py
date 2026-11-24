@@ -2,9 +2,10 @@
 
 
 class DomainIssue(ValueError):
-    def __init__(self, code):
+    def __init__(self, code, keys=None):
         super().__init__(code)
         self.code = code
+        self.keys = sorted({str(key) for key in (keys or []) if key})
 
 
 def by_kind(rows, kind):

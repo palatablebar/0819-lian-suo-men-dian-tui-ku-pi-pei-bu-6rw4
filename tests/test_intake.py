@@ -60,3 +60,23 @@ def test_empty_states_have_distinct_causes(value, reason):  # TRAP-18
 def test_unclosed_quote_invalidates_source():  # TRAP-16
     with pytest.raises(DomainIssue, match="CSV_MALFORMED"):
         inspect(csv_data([]) + b'"truncated\n')
+
+
+def test_trace_covers_every_row_once(dirty):
+    result = inspect(dirty)
+    trace = result["trace"]
+    assert [entry["ordinal"] for entry in trace] == list(range(1, result["input"] + 1))
+    assert [entry["bucket"] for entry in trace].count("accepted") == result["accepted"]
+    assert [entry["bucket"] for entry in trace].count("isolated") == result["rejected"]
+    assert [entry["bucket"] for entry in trace].count("ignored") == (
+        result["blank"] + result["repeated"]
+    )
+    assert result["skipped"] == [
+        {"line": 5, "ordinal": 4, "reason": "REPEATED_HEADER"},
+        {"line": 17, "ordinal": 16, "reason": "BLANK"},
+    ]
+    isolated = {row["line"]: row for row in result["isolation"]}
+    for entry in trace:
+        if entry["bucket"] == "isolated":
+            assert isolated[entry["line"]]["reason"] == entry["reason"]
+            assert isolated[entry["line"]]["record"] == entry["record"]

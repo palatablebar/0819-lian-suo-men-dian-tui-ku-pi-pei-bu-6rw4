@@ -26,7 +26,7 @@ def evaluate(rows, stage):
 
 def run(data, stage=5):
     intake = inspect(data)
-    output = {"intake": {k: v for k, v in intake.items() if k != "rows"}}
+    output = {"intake": {k: v for k, v in intake.items() if k not in {"rows", "trace"}}}
     if stage == 1:
         return output
     cases = [evaluate(rows, stage) for _, rows in case_groups(intake["rows"])]

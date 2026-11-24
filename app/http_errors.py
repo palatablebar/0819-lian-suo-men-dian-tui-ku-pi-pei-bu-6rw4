@@ -17,6 +17,9 @@ LABELS = {
     "UNRESOLVED_ISSUES": "存在待处理差异",
     "SAMPLE_UNKNOWN": "样例不存在",
     "STAGE_UNKNOWN": "处理阶段不存在",
+    "CUTOFF_INVALID": "来源截止点必须是非负整数",
+    "VERSION_NOT_FOUND": "签版不存在",
+    "LEDGER_UNBALANCED": "输入、采信、隔离与匹配行未逐项对平，新签版暂停发布",
 }
 
 
@@ -24,11 +27,14 @@ def response(error):
     code = error.code
     status = (
         404
-        if code in {"RUN_NOT_FOUND", "SAMPLE_UNKNOWN", "STAGE_UNKNOWN"}
+        if code in {"RUN_NOT_FOUND", "SAMPLE_UNKNOWN", "STAGE_UNKNOWN", "VERSION_NOT_FOUND"}
         else (
             409
             if code in {"STALE_REVIEW", "RUN_FINALIZED", "UNRESOLVED_ISSUES"}
             else 413 if code == "FILE_TOO_LARGE" else 422
         )
     )
-    return jsonify(code=code, message=LABELS.get(code, code)), status
+    body = dict(code=code, message=LABELS.get(code, code))
+    if getattr(error, "keys", None):
+        body["records"] = error.keys
+    return jsonify(**body), status

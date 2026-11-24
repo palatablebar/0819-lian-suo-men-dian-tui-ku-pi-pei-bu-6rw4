@@ -33,13 +33,34 @@
 <section class="panel inspection"><h2 id="detail-title">采信摘要</h2><pre id="detail"></pre></section>
 {% endmacro %}
 {% macro archive() %}
-<aside class="panel archive"><h2>批次复核</h2><ul id="history"></ul>
-  <form id="review" hidden>
-    <p id="run-status"></p><label for="note">复核意见</label>
-    <textarea id="note" name="note" minlength="3" maxlength="200" required></textarea>
-    <div class="review-actions"><button name="decision" value="HELD">暂缓</button><button class="action" name="decision" value="APPROVED">签发</button></div>
-    <a id="evidence">下载复核证据</a>
+<aside class="panel archive"><h2>签发匹配簿</h2>
+  <div class="cutoff">
+    <label for="cutoff">来源截止日</label>
+    <input id="cutoff" type="number" min="0" step="1" inputmode="numeric" placeholder="最新入库日">
+    <button id="preview-ledger" type="button">预览匹配簿</button>
+  </div>
+  <p id="ledger-status" role="status" aria-live="polite">尚未生成匹配簿</p>
+  <dl id="ledger-totals" class="totals"></dl>
+  <div class="scroll"><table id="ledger-rows" aria-label="退库匹配行"></table></div>
+  <div class="scroll"><table id="ledger-receipts" aria-label="入库余量行"></table></div>
+  <div id="ledger-diff" aria-label="相对上一签版"></div>
+  <form id="sign" hidden>
+    <label for="sign-note">签发说明</label>
+    <textarea id="sign-note" name="note" minlength="3" maxlength="200" required></textarea>
+    <div class="review-actions"><button class="action" id="sign-submit" type="submit">签发新版本</button></div>
   </form>
+  <h3>签版历史</h3>
+  <ul id="versions"></ul>
+  <a id="version-evidence" hidden>下载签版证据</a>
+  <details class="batch"><summary>批次复核</summary>
+    <ul id="history"></ul>
+    <form id="review" hidden>
+      <p id="run-status"></p><label for="note">复核意见</label>
+      <textarea id="note" name="note" minlength="3" maxlength="200" required></textarea>
+      <div class="review-actions"><button name="decision" value="HELD">暂缓</button><button class="action" name="decision" value="APPROVED">签发</button></div>
+      <a id="evidence">下载复核证据</a>
+    </form>
+  </details>
 </aside>
 {% endmacro %}
 {% macro status() %}

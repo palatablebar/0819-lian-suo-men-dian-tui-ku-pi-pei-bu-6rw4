@@ -32,3 +32,23 @@ def test_business_evidence_0001(dirty):
 
 def test_business_evidence_0004(dirty):
     assert find(dirty, "0004")["measure"]["evidence"] == EVIDENCE["0004"]
+
+
+def test_shortfall_holds_whole_case_in_evidence():
+    from app.modules.calculate import compute
+
+    rows = [
+        dict(record="R1", case="C1", kind="receive", lot=1, day=1, expires=30, quantity=6, note=""),
+        dict(record="T1", case="C1", kind="return", lot=1, day=2, expires=30, quantity=4, note=""),
+        dict(record="T2", case="C1", kind="return", lot=1, day=3, expires=30, quantity=9, note=""),
+    ]
+    receipts = [row for row in rows if row["kind"] == "receive"]
+    returns = sorted(
+        (row for row in rows if row["kind"] == "return"),
+        key=lambda row: (row["day"], row["record"]),
+    )
+    result = compute((receipts, returns, 6))
+    assert result["evidence"]["matched"] == {}
+    assert result["evidence"]["pending"] == ["T2"]
+    assert result["evidence"]["remaining"] == {"R1": 6}
+    assert result["value"] == 6 and result["flag"] is True
